@@ -2,43 +2,48 @@
 
 written by Emily Pollacchi
   	file name alignX
-  	Copyright (C) 2016 by Emily Pollacchi
+  	Copyright (C) 2024 by Emily Pollacchi
   	epollacchi@gmail.com
 
 '''
 
-import maya.cmds as mc
-def alignX():
+import maya.cmds as cmds
 
-    #Select objects
-    selObjs = mc.ls(selection=True)
-    
-    #move pivot to the bottom
+def alignX():
+    # Select objects
+    selObjs = cmds.ls(selection=True)
+
+    # Check for selection
+    if not selObjs:
+        cmds.error("No objects selected.")
+
+    # Move pivot to the bottom
     for Objs in selObjs:
-        bbox = mc.exactWorldBoundingBox(Objs)
-        bottom = [(bbox[0] + bbox[3])/2, bbox[1], (bbox[2] + bbox[5])/2]
-        mc.xform(Objs, piv=bottom, ws=True)
-    
-    #move object to the origin
+        bbox = cmds.exactWorldBoundingBox(Objs)
+        bottom = [(bbox[0] + bbox[3]) / 2, bbox[1], (bbox[2] + bbox[5]) / 2]
+        cmds.xform(Objs, piv=bottom, ws=True)
+
+    # Move object to the origin
     for Objs in selObjs:
-        mc.move(0,0,0, Objs, rpr=True, absolute=True)
-    
-    #freeze transformations
+        cmds.move(0, 0, 0, Objs, rpr=True, absolute=True)
+
+    # Freeze transformations
     for Objs in selObjs:
-        mc.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
-    
-    ##move objects along the X axis. You can change 5 to another number to change the spacing.
+        cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
+
+    # Move objects along the X axis. You can change 5 to another number to change the spacing.
     inc = 0
     for Objs in selObjs:
-        mc.move(inc*5,0,0, Objs)
+        cmds.move(inc * 5, 0, 0, Objs)
         inc = inc + 1
-        
-    #freeze transformations
-    for Objs in selObjs:
-        mc.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
 
-    #delete non-deformer history
+    # Freeze transformations
     for Objs in selObjs:
-        mc.BakeNonDefHistory()
+        cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
+
+    # Delete non-deformer history
+    for Objs in selObjs:
+        cmds.BakeNonDefHistory()
+
 
 alignX()
